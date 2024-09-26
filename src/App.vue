@@ -1,11 +1,18 @@
+<script setup>
+import JobListnings from './components/JobListnings.vue';
+import Navbar from './components/Navbar.vue';
+import Hero from './components/Hero.vue';
+import HomeCards from './components/HomeCards.vue';
+
+</script>
+
+
 <template>
-  <Navbar>
-  </Navbar>
+  <Navbar></Navbar>
+  <Hero title="Become Laravel dev" subtitle="Dont worry you got this"></Hero>
+  <HomeCards></HomeCards>
+  <JobListnings></JobListnings>
+ 
 
 </template>
 
-<script setup>
-
-import Navbar from './components/Navbar.vue';
-
-</script>
