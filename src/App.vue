@@ -11,8 +11,7 @@ import HomeCards from './components/HomeCards.vue';
   <Navbar></Navbar>
   <Hero title="Become Laravel dev" subtitle="Dont worry you got this"></Hero>
   <HomeCards></HomeCards>
-  <JobListnings></JobListnings>
+  <JobListnings :limit = 3 :showButton="true"></JobListnings>
  
-
 </template>
 
