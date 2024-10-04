@@ -1,7 +1,7 @@
 <script setup>
-import JobData from '@/jobs.json'; // Uvoz JSON datoteke
-import { ref, defineProps } from 'vue'; // Uvoz ref funkcije
+import { ref, defineProps, onMounted } from 'vue'; // Uvoz ref funkcije
 import JobListing from './JobListing.vue';
+import axios from 'axios';
 
 defineProps({
   limit: Number,
@@ -12,7 +12,34 @@ defineProps({
 });
 
 // Definiranje reaktivne varijable za poslove
-const jobs = ref(JobData.jobs); // Pristupamo ključu 'jobs' unutar JSON datoteke
+const jobs = ref([]); 
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://localhost:5000/jobs');
+    
+    // Logiraj response.data da vidiš kakav je oblik podataka
+    console.log('API Response:', response.data);
+
+    jobs.value = response.data.map((job, index) => {
+      if (!job.id) {
+        job.id = index + 1; // Dodaj index kao privremeni 'id'
+      }
+      return job;
+    });
+
+    // Logiraj jobs.value nakon dodjeljivanja
+    console.log('Jobs after assignment:', jobs.value);
+
+  } catch (error) {
+    console.error('Greška prilikom dohvaćanja podataka:', error);
+  }
+});
+
+
+
+
+
 
 // Provjera u konzoli
 </script>
