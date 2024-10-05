@@ -1,4 +1,5 @@
 <script setup>
+import BackButton from '@/components/BackButton.vue';
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'; // Loader komponenta
 import { ref, onMounted } from 'vue'; // Ref i lifecycle metode
 import axios from 'axios'; // Axios za dohvaćanje podataka
@@ -13,7 +14,7 @@ const route = useRoute(); // Kreiramo instancu useRoute za pristup parametrima
 onMounted(async () => {
   try {
     const jobId = route.params.id; // Dohvaćamo ID iz parametara rute
-    const response = await axios.get(`http://localhost:5000/jobs/${jobId}`); // Dinamički endpoint s ID-em
+    const response = await axios.get(`/api/jobs/${jobId}`); // Dinamički endpoint s ID-em
     job.value = response.data; // Postavljanje dohvaćenih podataka
     //console.log(job.value); // Ispis podataka u konzolu za provjeru
   } catch (error) {
@@ -25,6 +26,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <BackButton/>
   <section class="bg-green-50">
     <div class="container m-auto py-10 px-6">
       <div class="grid grid-cols-1 md:grid-cols-70/30 w-full gap-6">

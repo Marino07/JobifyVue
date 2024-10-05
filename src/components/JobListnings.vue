@@ -16,7 +16,7 @@ const jobs = ref([]);
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:5000/jobs');
+    const response = await axios.get('/api/jobs');
     
     // Logiraj response.data da vidiš kakav je oblik podataka
     console.log('API Response:', response.data);
