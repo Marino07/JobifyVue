@@ -3,7 +3,8 @@ import BackButton from '@/components/BackButton.vue';
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue'; // Loader komponenta
 import { ref, onMounted } from 'vue'; // Ref i lifecycle metode
 import axios from 'axios'; // Axios za dohvaćanje podataka
-import { useRoute } from 'vue-router'; // Koristimo useRoute za dohvaćanje parametara iz rute
+import { useRoute, RouterLink, useRouter } from 'vue-router'; // Koristimo useRoute za dohvaćanje parametara iz rute
+import { useToast } from 'vue-toastification';
 
 // Reaktivni podaci
 const job = ref(null); // Početno stanje za podatke o poslu
@@ -11,9 +12,32 @@ const isLoading = ref(true); // Pratimo da li se podaci učitavaju
 
 const route = useRoute(); // Kreiramo instancu useRoute za pristup parametrima
 
+const router = useRouter();
+
+const toast  = useToast();
+
+const jobId = route.params.id; // Dohvaćamo ID iz parametara rute
+
+
+const DeleteJob = async () => {
+
+  try{
+    const confirm = window.confirm('Are you sure you want to delete this?');
+    if(confirm){
+      await axios.delete(`/api/jobs/${jobId}`);
+    toast.success('Job deleted successfully');
+    router.push('/jobs');
+    }
+    
+  }catch (error) {
+    console.error('Greška prilikom dohvaćanja podataka:', error);
+    toast.error('Job is not deleted');
+  }
+
+};
+
 onMounted(async () => {
   try {
-    const jobId = route.params.id; // Dohvaćamo ID iz parametara rute
     const response = await axios.get(`/api/jobs/${jobId}`); // Dinamički endpoint s ID-em
     job.value = response.data; // Postavljanje dohvaćenih podataka
     //console.log(job.value); // Ispis podataka u konzolu za provjeru
@@ -37,7 +61,7 @@ onMounted(async () => {
             <div class="text-gray-500 mb-4">{{ job.jobType || 'Full-Time' }}</div>
             <h1 class="text-3xl font-bold mb-4">{{ job.title || 'Job Title' }}</h1>
             <div class="text-gray-500 mb-4 flex align-middle justify-center md:justify-start">
-              <i class="fa-solid fa-location-dot text-lg text-orange-700 mr-2"></i>
+              <i class="pi pi-map-marker text-lg text-orange-700 mr-2"></i>
               <p class="text-orange-700">{{ job.location || 'Location' }}</p>
             </div>
           </div>
@@ -75,8 +99,8 @@ onMounted(async () => {
           <!-- Manage -->
           <div class="bg-white p-6 rounded-lg shadow-md mt-6">
             <h3 class="text-xl font-bold mb-6">Manage Job</h3>
-            <a href="#" class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full">Edit Job</a>
-            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full mt-4">Delete Job</button>
+            <RouterLink :to="`/jobs/edit/${jobId}`" class="bg-green-500 hover:bg-green-600 text-white text-center font-bold py-2 px-4 rounded-full w-full">Edit Job</RouterLink>
+            <button @click="DeleteJob" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full mt-4">Delete Job</button>
           </div>
         </aside>
 
